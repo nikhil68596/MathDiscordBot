@@ -7,14 +7,13 @@ import discord
 import os
 from discord.ext import commands
 from dotenv import load_dotenv
-import numpy as np
 
 matrix = None
 vector = None
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
-SERVERID = os.getenv('ID')
+GUILD = os.getenv('ID')
 
 bot = commands.Bot(command_prefix = '$')
 client = discord.Client()
@@ -133,6 +132,8 @@ async def dotProduct(ctx, length: int):
     # Create two vectors (vector 1 and vector 2)
     vector1 = []
     vector2 = []
+    embed = discord.Embed(title = 'Entries in Vectors u and v',
+    description = 'Please enter the entries of vectors u and v')
     # For length number of times
     for i in range(length):
         # Create a vector for the first vector
@@ -191,9 +192,8 @@ async def dotProduct(ctx, length: int):
         # Check if you reach the last entry to not add the + in the string if you do.
         if(i == length-1):
             break
-        else:
-            dotProductWork = dotProductWork + " + "
         # Otherwise, add the plus sign in the string. 
+        dotProductWork = dotProductWork + " + "
     # Return the string being concatenated to equal to the dot product.
     await ctx.send(dotProductWork + f' = {dotProduct}') 
     await ctx.reply(f'The dot product of u and v is {dotProduct}.')

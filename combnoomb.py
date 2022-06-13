@@ -30,11 +30,25 @@ async def on_message(message):
 async def hello(ctx):
     userName = ctx.message.author.name
     await ctx.reply(f'Hello {userName}!')
+@bot.command()
+def helpMatrixVectorProduct():
+    return True
 
 @bot.command()
-async def help(ctx):
-    await ctx.send('Hey, which method do you need help on?')
-    anotherMessage = await bot.wait_for('message',check=lambda m: m.author==ctx.author and m.channel==ctx.channel,timeout=80)
+def helpDotProduct():
+    return True
+
+@bot.command()
+def helpRankOfMatrix():
+    return True
+
+@bot.command()
+def helpRrefOfMatrix():
+    return True
+
+@bot.command()
+def helpEigenvectorOrNot():
+    return True
 
 @bot.command()
 async def createMatrix(ctx, length:int, width:int, listOfEntries:str, matrixUsed):
@@ -161,6 +175,15 @@ async def matrixVectorProduct(ctx, length:int, width:int):
         vector.append(resultingVector[i])
         result.append(vector)
     await ctx.send(f'Matrix-Vector Product: {result}')
+    if(helpMatrixVectorProduct()):
+        string = "c is a constant(entry in vector) and v is a vector in the matrix"
+        formula = ""
+        for i in range(len(resultingVector)):
+            formula = formula + f'c{i+1}v{i+1}'
+            if(i == len(resultingVector)-1):
+                continue
+            formula = formula + "+"
+        await ctx.send(formula)
      # Tell the user to figure out whether the vector is the eigenvector of a matrix.
     await ctx.send(f'I am going to figure out whether the vector you created is an eigenvector of the matrix you created.')
     # If true, return Yes.
@@ -214,15 +237,16 @@ async def dotProduct(ctx, length: int):
         # Store that vector for the first vector in the second vector.
         vector2.append(vectorForAnotherVector)
         # Use a for loop to write the indices after the u and v.
-    string = ""
-    for i in range(length):
+    if(helpDotProduct()):
+         string = ""
+         for i in range(length):
          # Add the + separately.
-        string = string + f'u{i+1} * v{i+1}'
-        if(i == length-1):
-            break
-        string = string + " + "
+            string = string + f'u{i+1} * v{i+1}'
+            if(i == length-1):
+                break
+            string = string + " + "
     # Write the formula for the dot product to the user.
-    await ctx.send("Dot Product Formula: " + string)
+         await ctx.send("Dot Product Formula: " + string)
     # Create a string that is empty for now (Used to show work in dot product formula.)
     #dotProductWork = ""
     # Have a sum of dot products variable initialized to 0.
@@ -289,20 +313,43 @@ def eigenvectorOrNot(vector, resultingVector):
    return True
 def rankOfMatrix(matrix):
     # Call the rrefOfMatrix method.
+    matrix = rrefOfMatrix(matrix)
     # Initialize the rank to 0
+    rank = 0
     # Using that matrix, starting the pivot entry at row 0 and col 0.
-        # While the row or col isn't out of bounds. 
+    rowNum = 0
+    colNum = 0
+    # While the row or col isn't out of bounds. 
+    while(rowNum != len(matrix) or colNum != len(matrix[rowNum])):
             # If the pivot entry is a 0.
+        if(matrix[rowNum][colNum] == 0):
+            isFound = False
+            for i in range(colNum + 1, len(matrix[rowNum])):
+                if(matrix[rowNum][i] != 0):
+                    rank = rank + 1
+                    isFound = True
+                    break
+            if(isFound == False):
+                for j in range(rowNum + 1, len(matrix)):
+                    if(matrix[j][colNum] != 0):
+                        rank = rank + 1
+                        isFound = True
+                        break
+            if(isFound == False):
+                continue
                 # Increment the row first and see if you found a non-zero pivot entry.
                     # IF yes then increase the rank by 1 and stop searching.
                     # Otherwise keep looking.
                 # If still not found, then increment the row and col by 1. 
             # Otherwise
+            else:
+                rank = rank + 1
+                rowNum = rowNum + 1
+                colNum = colNum + 1
                 # Increment the rank by 1.
                 # Increment the row and col by 1. 
     # Return the rank of the matrix. 
-
-    return None
+    return rank
 def rrefOfMatrix(matrix):
     # Stack of indices of pivot entries.
     stackOfPivotEntries = []
@@ -370,23 +417,24 @@ def rrefOfMatrix(matrix):
         rowNum = stackOfPivotEntries.pop()
         # Using that row and col number, that is where the pivot entry is located in. 
         # For each row above the pivot entry
-        for i in range(rowNum - 1, 0):
-            # # If the pivot entry is a 0
-            if(matrix[rowNum][colNum] == 0):
-            # Linearly check the rows below to see if there is another pivot entry below the 0.
-                # If yes, then exchange the rows. 
-                # Otherwise, check each column in the row you are on.
-                    # IF you found a pivot entry, rref starts from there.
-                    # Otherwise, pivot entry starts from 1 row down and 1 col right. 
+        if(matrix[rowNum][colNum] == 0):
+            continue
+        else:
+            if(matrix[rowNum][colNum] != 1):
+                matrix[rowNum] = np.array((1/(matrix[rowNum][colNum])) * matrix[rowNum])
+            for j in range(rowNum-1, -1):
+                if(matrix[j][colNum] == 0):
+                    continue
+                matrix[j] = np.array((-1 * matrix[j][colNum]) * matrix[rowNum]) + np.array(matrix[j])
         # Otherwise
             # IF the pivot entry is not a 1
                 # Scale the row by the reciprocal of that entry.
-            # For each row below the pivot entry.
-                # If the pivot is 0
+            # For each row above the pivot entry.
+                # If the entry above the pivot is 0
                     # Skip and move a row below.
                 # Scale the row containing the pivot you are currently on by -1 * current entry below the pivot entry
                 # and add it to the row that you wanna do the operation on, which is the row containing the current entry
                 # below the pivot entry.
     # Return the matrix at the end. 
-    return None
+    return matrix
 bot.run(TOKEN)

@@ -30,25 +30,6 @@ async def on_message(message):
 async def hello(ctx):
     userName = ctx.message.author.name
     await ctx.reply(f'Hello {userName}!')
-@bot.command()
-def helpMatrixVectorProduct():
-    return True
-
-@bot.command()
-def helpDotProduct():
-    return True
-
-@bot.command()
-def helpRankOfMatrix():
-    return True
-
-@bot.command()
-def helpRrefOfMatrix():
-    return True
-
-@bot.command()
-def helpEigenvectorOrNot():
-    return True
 
 @bot.command()
 async def createMatrix(ctx, length:int, width:int, listOfEntries:str, matrixUsed):
@@ -175,15 +156,15 @@ async def matrixVectorProduct(ctx, length:int, width:int):
         vector.append(resultingVector[i])
         result.append(vector)
     await ctx.send(f'Matrix-Vector Product: {result}')
-    if(helpMatrixVectorProduct()):
-        string = "c is a constant(entry in vector) and v is a vector in the matrix"
-        formula = ""
-        for i in range(len(resultingVector)):
-            formula = formula + f'c{i+1}v{i+1}'
-            if(i == len(resultingVector)-1):
-                continue
-            formula = formula + "+"
-        await ctx.send(formula)
+    #if(helpMatrixVectorProduct()):
+        #string = "c is a constant(entry in vector) and v is a vector in the matrix"
+        #formula = ""
+        #for i in range(len(resultingVector)):
+           # formula = formula + f'c{i+1}v{i+1}'
+            #if(i == len(resultingVector)-1):
+                #continue
+            #formula = formula + "+"
+        #await ctx.send(formula)
      # Tell the user to figure out whether the vector is the eigenvector of a matrix.
     await ctx.send(f'I am going to figure out whether the vector you created is an eigenvector of the matrix you created.')
     # If true, return Yes.

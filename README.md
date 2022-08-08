@@ -13,7 +13,7 @@ Linear Algebra operations the bot can do:
 
 Modules/Libraries Used:
 1. discord 
-2. numpy
+2. numpy- Used this library to make addition/subtraction/multiplication/division on vectors more efficient.
 3. turtle
 4. asyncio
 5. pickle
